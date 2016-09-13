@@ -19,27 +19,21 @@ instance Eq Value where
   Maybe n == Maybe m = n == m
 
 -- Position
-data Position = Pos (Int, Int)
+type Position = (Int, Int)
 pos_x :: Position -> Int
-pos_x (Pos (x,_)) = x
+pos_x (x,_) = x
 
 pos_y :: Position -> Int
-pos_y (Pos (_,y)) = y
-
-instance Eq Position where
-  (Pos (x,y)) == (Pos (u,v)) = (x == u) && (y == v)
-
-instance Show Position where
-  show (Pos t) = show t
+pos_y (_,y) = y
 
 -- Board
 type Board = [(Position, Value)]
 
 -- Result
-type Result = [(Position, Bone)]
+type Result = [(Position, LaidBone)]
 
 positions :: Int -> [Position]
-positions n = [ Pos (x,y) | x <- [1..(n+2)], y <- [1..(n+1)] ]
+positions n = [ (x,y) | x <- [1..(n+2)], y <- [1..(n+1)] ]
 
 emptyBoard :: Int -> Board
 emptyBoard n = zip (positions n) (repeat Empty)
@@ -48,15 +42,18 @@ boardFromValues :: Int -> [Int] -> Board
 boardFromValues n values | (length values) /= (length (positions n)) = error "Provide exactly as many values as fit the board"
                          | otherwise = zip (positions n) [ Maybe x | x <- values ]
 
+result :: Int -> Result
+result n = zip (positions n) (repeat None)
+
 data Solution = Move Board Bones Result [Solution] | Solved Result | GameOver
 
 data Side = Left' | Right' | Up' | Down'
 
 neighbour :: Position -> Side -> Position
-neighbour (Pos (x,y)) Left'  = Pos (x - 1, y)
-neighbour (Pos (x,y)) Right' = Pos (x + 1, y)
-neighbour (Pos (x,y)) Up'    = Pos (x, y - 1)
-neighbour (Pos (x,y)) Down'  = Pos (x, y + 1)
+neighbour (x,y) Left'  = (x - 1, y)
+neighbour (x,y) Right' = (x + 1, y)
+neighbour (x,y) Up'    = (x, y - 1)
+neighbour (x,y) Down'  = (x, y + 1)
 
 neighbours :: Position -> Board -> [(Position, Value)]
 neighbours pos board = [ (p,v) | (p,v) <- board, inList p [neighbour pos Left', neighbour pos Right', neighbour pos Up', neighbour pos Down'] ]
