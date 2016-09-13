@@ -9,13 +9,13 @@ printLn input = putStrLn input
 newLine :: IO()
 newLine = putChar '\n'
 
-printList :: [Int] -> IO ()
+printList :: Show a => [a] -> IO ()
 printList [] = return ()
 printList (x:xs) = do (putStr . show) x
                       putStr " "
                       printList xs
 
-printListList :: [[Int]] -> IO ()
+printListList :: Show a => [[a]] -> IO ()
 printListList [] = return ()
 printListList (x:xs) = do printList x
                           newLine
@@ -23,4 +23,13 @@ printListList (x:xs) = do printList x
 
 printBoard :: Board -> IO ()
 printBoard board = do printLn "input"
-                      (printListList . chop (board_y board) . map (\(p,v) -> int v)) board
+                      (printListList . chop (board_y board) . map (\(p,v) -> v)) board
+
+printResult :: Result -> IO ()
+printResult result = do printLn "solution"
+                        (printListList . (chop 3) . map (\(p,b) -> b)) result
+
+printResultList :: [Result] -> IO ()
+printResultList [] = printLn "There are no solutions"
+printResultList (r:results) = do printResult r
+                                 printResultList results

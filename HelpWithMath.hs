@@ -25,3 +25,6 @@ unfold p h t x | p x       = []
 
 chop :: Int -> [a] -> [[a]]
 chop n = unfold null (take n) (drop n)
+
+-- Counting occurences
+count n xs ys = all (\s -> s == n) (map (\x -> sum [ 1 | y <- ys, y == x ]) xs)
