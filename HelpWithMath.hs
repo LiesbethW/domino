@@ -16,3 +16,12 @@ find x tuples = [ b | (a,b) <- tuples, a == x ]
 
 remove :: Eq a => a -> [(a,b)] -> [(a,b)]
 remove x tuples = [ (a,b) | (a,b) <- tuples, a /= x ]
+
+--- Chopping
+-- Unfold
+unfold :: (a -> Bool) -> (a -> b) -> (a -> a) -> a -> [b]
+unfold p h t x | p x       = []
+               | otherwise = h x : unfold p h t (t x)
+
+chop :: Int -> [a] -> [[a]]
+chop n = unfold null (take n) (drop n)

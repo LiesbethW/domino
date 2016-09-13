@@ -26,11 +26,20 @@ pos_x (x,_) = x
 pos_y :: Position -> Int
 pos_y (_,y) = y
 
+pos :: Int -> Int -> Position
+pos x y = (x,y)
+
 -- Board
 type Board = [(Position, Value)]
 
+board_x :: Board -> Int
+board_x board = maximum [ pos_x p | (p,v) <- board ]
+
+board_y :: Board -> Int
+board_y board = maximum [ pos_y p | (p,v) <- board ]
+
 -- Result
-type Result = [(Position, LaidBone)]
+type Result = [(Position, Bone)]
 
 positions :: Int -> [Position]
 positions n = [ (x,y) | x <- [1..(n+2)], y <- [1..(n+1)] ]
@@ -41,9 +50,6 @@ emptyBoard n = zip (positions n) (repeat Empty)
 boardFromValues :: Int -> [Int] -> Board
 boardFromValues n values | (length values) /= (length (positions n)) = error "Provide exactly as many values as fit the board"
                          | otherwise = zip (positions n) [ Maybe x | x <- values ]
-
-result :: Int -> Result
-result n = zip (positions n) (repeat None)
 
 data Solution = Move Board Bones Result [Solution] | Solved Result | GameOver
 
@@ -65,9 +71,12 @@ solve input (b:bs) output = Move input (b:bs) output [ solve input' bs output' |
 possibleMoves :: Board -> Bone -> Result -> [(Board,Result)]
 possibleMoves input piece output = []
 
-validPlace :: Bone -> (Position,Value) -> (Position,Value) -> Bool
-validPlace bone (_, Maybe val1) (_, Maybe val2) = pip1 bone == val1 && pip2 bone == val2
-validPlace _ _ _ = False
+--validPlace :: Bone -> (Position,Value) -> (Position,Value) -> Bool
+--validPlace bone (_, Maybe val1) (_, Maybe val2) = pip1 bone == val1 && pip2 bone == val2
+--validPlace _ _ _ = False
+
+validPlace :: Board -> Bone -> (Position,Position) -> Bool
+validPlace board stone (pos1,pos2) = int (findValue pos1 board) == pip1 stone && int (findValue pos2 board) == pip2 stone
 
 placePiece :: Board -> Bone -> (Position,Position) -> Result -> (Board, Result)
 placePiece input piece (pos1,pos2) output | (any (\x -> x == Empty) . map (\x -> findValue x input)) [pos1,pos2] = error "One of the positions not (free) on board."
@@ -80,5 +89,8 @@ getValue [x] = x
 findValue :: Position -> Board -> Value
 findValue pos board = getValue [ b | (p,b) <- board, p == pos ]
 
-removePosition :: Position -> Board -> Board
-removePosition pos board = [ (p,b) | (p,b) <- board, p /= pos ]
+removePositions :: (Position,Position) -> Board -> Board
+removePositions (p1,p2) board = [ (p,b) | (p,b) <- board, p /= p1 && p /= p2 ]
+
+addBone :: Bone -> Result -> (Position,Position) -> Result
+addBone b res (p1,p2) = (p1,b) : (p2,b) : res
