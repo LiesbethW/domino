@@ -1,12 +1,27 @@
 module Bone where
 import HelpWithMath
 
-type Pips = Int
+type Bone = (Int, (Int,Int))
 
-data Bone = Piece (Pips,Pips)
+bone :: Int -> Int -> Int -> Bone
+bone x y z = (x, (y,z))
 
-instance Show Bone where
-  show (Piece m) =  (show (fst m)) ++ "|" ++ (show (snd m))
+number :: Bone -> Int
+number (n, _) = n
 
-bones :: Int -> [(Int, Bone)]
-bones n = zip [1..(triangular (n + 1))] [ Piece (a,b) | a <- [0..n], b <- [a..n]]
+pips :: Bone -> (Int,Int)
+pips (_,p) = p
+
+pip1 :: Bone -> Int
+pip1 (_,(a,_)) = a
+
+pip2 :: Bone -> Int
+pip2 (_,(_,b)) = b
+
+type Bones = [Bone]
+
+  --instance Show Bone where
+  --  show b = ((show . pip1) b) ++ "|" ++ ((show . pip2) b)
+
+bones :: Int -> Bones
+bones n = zip [1..(triangular (n + 1))] [ (a,b) | a <- [0..n], b <- [a..n]]

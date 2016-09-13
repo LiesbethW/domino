@@ -1,6 +1,5 @@
+module Domino where
+import Board
 import Print
-import Bone
-import HelpWithMath
 
-dominos :: Int -> [(Int, Bone)]
-dominos n = zip [1..(triangular (n + 1))] [ Piece (a,b) | a <- [0..n], b <- [a..n]]
+board2 = boardFromValues 2 [0,0,0,1,1,1,2,1,0,2,2,2]
