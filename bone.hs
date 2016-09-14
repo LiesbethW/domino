@@ -3,8 +3,8 @@ import HelpWithMath
 
 type Bone = (Int, (Int,Int))
 
-bone :: Int -> Int -> Int -> Bone
-bone x y z = (x, (y,z))
+newBone :: Int -> Int -> Int -> Bone
+newBone x y z = (x, (y,z))
 
 number :: Bone -> Int
 number (n, _) = n
@@ -23,5 +23,5 @@ type Bones = [Bone]
   --instance Show Bone where
   --  show b = ((show . pip1) b) ++ "|" ++ ((show . pip2) b)
 
-bones :: Int -> Bones
-bones n = zip [1..(triangular (n + 1))] [ (a,b) | a <- [0..n], b <- [a..n]]
+newBones :: Int -> Bones
+newBones n = zip [1..(triangular (n + 1))] [ (a,b) | a <- [0..n], b <- [a..n]]

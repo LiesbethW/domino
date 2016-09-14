@@ -87,21 +87,6 @@ type Result = Grid Piece
 newResult :: Int -> Result
 newResult n = zip (positions n) (repeat None)
 
--- Solution
-data Solution = Move (Board,Result) Bones [Solution] | Solved Result | GameOver
-
-getResults :: Solution -> [Result]
-getResults (Solved result)      = [result]
-getResults GameOver             = []
-getResults (Move _ _ solutions) = (concat . map getResults) solutions
-
-solve :: (Board,Result) -> Bones -> Solution
-solve (input,output) [] = Solved output
-solve (input,output) (b:bs) = Move (input,output) (b:bs) [ solve (input',output') bs | (input', output') <- possibleMoves input b output ]
-
-possibleMoves :: Board -> Bone -> Result -> [(Board,Result)]
-possibleMoves input stone output = uniq (map (placePiece (input,output) stone) (validPlaces input stone))
-
 isValidPlace :: Board -> Bone -> (Position,Position) -> Bool
 isValidPlace board stone (pos1,pos2) = int (findValue pos1 board) == pip1 stone && int (findValue pos2 board) == pip2 stone
 

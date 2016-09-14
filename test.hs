@@ -8,5 +8,5 @@ test = do
 
 -- Bone
 testNumber :: Int -> Int -> Int -> Bool
-testNumber = (\x y z-> number (bone x y z)  == x)
+testNumber = (\x y z-> number (newBone x y z)  == x)
 
