@@ -1,6 +1,7 @@
 module Board where
 import Bone
 import HelpWithMath
+import Text.Printf
 
 -- Value
 data Value = Maybe Int | Empty
@@ -10,14 +11,13 @@ int (Maybe n) = n
 int (Empty)   = -1
 
 instance Show Value where
-  show (Maybe n) = show n
-  show (Empty)   = "-"
+  show (Maybe n) = printf "%3u" n
+  show (Empty)   = printf "%3s" "-"
 
 instance Eq Value where
-  Empty == Empty     = True
-  Maybe _ == Empty   = False
-  Empty == Maybe _   = False
   Maybe n == Maybe m = n == m
+  Empty == Empty     = True
+  _ == _             = False
 
 -- Position
 type Position = (Int, Int)
@@ -31,7 +31,7 @@ pos :: Int -> Int -> Position
 pos x y = (x,y)
 
 positions :: Int -> [Position]
-positions n = [ (x,y) | x <- [1..(n+2)], y <- [1..(n+1)] ]
+positions n = [ (x,y) | x <- [1..(n+1)], y <- [1..(n+2)] ]
 
 data Side = Left' | Right' | Up' | Down'
 
@@ -78,8 +78,8 @@ instance Eq Piece where
   _ == _               = False
 
 instance Show Piece where
-  show (Number x) = show x
-  show (None)     = "-"
+  show (Number x) = printf "%3u" x
+  show (None)     = printf "%3s" "-"
 
 -- Result
 type Result = Grid Piece
