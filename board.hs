@@ -41,14 +41,17 @@ neighbour (x,y) Right' = (x + 1, y)
 neighbour (x,y) Up'    = (x, y - 1)
 neighbour (x,y) Down'  = (x, y + 1)
 
+-- PositionMap
+type Grid a = [(Position, a)]
+
+height :: Grid a -> Int
+height grid = maximum [ pos_x p | (p,_) <- grid ]
+
+width :: Grid a -> Int
+width grid = maximum [ pos_y p | (p,_) <- grid ]
+
 -- Board
-type Board = [(Position, Value)]
-
-board_x :: Board -> Int
-board_x board = maximum [ pos_x p | (p,v) <- board ]
-
-board_y :: Board -> Int
-board_y board = maximum [ pos_y p | (p,v) <- board ]
+type Board = Grid Value
 
 emptyBoard :: Int -> Board
 emptyBoard n = zip (positions n) (repeat Empty)
@@ -69,12 +72,17 @@ data Piece = Number Int | None
 piece :: Bone -> Piece
 piece b = Number (number b)
 
+instance Eq Piece where
+  Number n == Number m = n == m
+  None == None         = True
+  _ == _               = False
+
 instance Show Piece where
   show (Number x) = show x
   show (None)     = "-"
 
 -- Result
-type Result = [(Position, Piece)]
+type Result = Grid Piece
 
 newResult :: Int -> Result
 newResult n = zip (positions n) (repeat None)
@@ -92,7 +100,7 @@ solve (input,output) [] = Solved output
 solve (input,output) (b:bs) = Move (input,output) (b:bs) [ solve (input',output') bs | (input', output') <- possibleMoves input b output ]
 
 possibleMoves :: Board -> Bone -> Result -> [(Board,Result)]
-possibleMoves input stone output = map (placePiece (input,output) stone) (validPlaces input stone)
+possibleMoves input stone output = uniq (map (placePiece (input,output) stone) (validPlaces input stone))
 
 isValidPlace :: Board -> Bone -> (Position,Position) -> Bool
 isValidPlace board stone (pos1,pos2) = int (findValue pos1 board) == pip1 stone && int (findValue pos2 board) == pip2 stone

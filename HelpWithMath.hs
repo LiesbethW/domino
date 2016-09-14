@@ -28,3 +28,11 @@ chop n = unfold null (take n) (drop n)
 
 -- Counting occurences
 count n xs ys = all (\s -> s == n) (map (\x -> sum [ 1 | y <- ys, y == x ]) xs)
+
+-- Unique elements (is 'nub': https://downloads.haskell.org/~ghc/6.12.1/docs/html/libraries/base-4.2.0.0/src/Data-List.html#nub)
+uniq :: Eq a => [a] -> [a]
+uniq list = uniq' list []
+  where
+    uniq' [] _  = []
+    uniq' (x:xs) ls | x `elem` ls   = uniq' xs ls
+                    | otherwise     = x : uniq' xs (x:ls)

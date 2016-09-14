@@ -23,11 +23,11 @@ printListList (x:xs) = do printList x
 
 printBoard :: Board -> IO ()
 printBoard board = do printLn "input"
-                      (printListList . chop (board_y board) . map (\(p,v) -> v)) board
+                      (printListList . chop (width board) . map (\(p,v) -> v)) board
 
 printResult :: Result -> IO ()
 printResult result = do printLn "solution"
-                        (printListList . (chop 3) . map (\(p,b) -> b)) result
+                        (printListList . chop (width result) . map (\(p,b) -> b)) result
 
 printResultList :: [Result] -> IO ()
 printResultList [] = printLn "There are no solutions"
