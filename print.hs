@@ -30,6 +30,6 @@ printResult result = do printLn "solution"
                         (printListList . chop (width result) . map (\(p,b) -> b)) result
 
 printResultList :: [Result] -> IO ()
-printResultList [] = printLn "There are no solutions"
+printResultList [] = printLn "There are no (more) solutions"
 printResultList (r:results) = do printResult r
                                  printResultList results

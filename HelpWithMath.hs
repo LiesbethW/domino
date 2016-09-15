@@ -7,6 +7,7 @@ faculty n = n * faculty (n - 1)
 triangular :: Int -> Int
 triangular n = (n * (n + 1) `div` 2)
 
+-- Help with lists
 inList :: Eq a => a -> [a] -> Bool
 inList a []     = False
 inList a (x:xs) = (a == x) || inList a xs

@@ -20,8 +20,5 @@ pip2 (_,(_,b)) = b
 
 type Bones = [Bone]
 
-  --instance Show Bone where
-  --  show b = ((show . pip1) b) ++ "|" ++ ((show . pip2) b)
-
 newBones :: Int -> Bones
 newBones n = zip [1..(triangular (n + 1))] [ (a,b) | a <- [0..n], b <- [a..n]]
