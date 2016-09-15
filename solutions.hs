@@ -16,9 +16,15 @@ solve (input,output,[]) = Solved output
 solve (input,output,bones) = Move (input,output) bones [ solve x | x <- nextMoves (input,output,bones) ]
 
 nextMoves :: (Board,Result,Bones) -> [(Board,Result,Bones)]
-nextMoves (input,output,b:bs) = [ (board,result,bs) | (board,result) <- possibleMoves input b output ]
+nextMoves (input,output,bones) = [ (board,result,bs) | (board,result) <- possibleMoves input output b ]
+  where
+    (b:bs) = bestBoneFirst (input,output,bones)
 
-possibleMoves :: Board -> Bone -> Result -> [(Board,Result)]
-possibleMoves input stone output = uniq (map (placePiece (input,output) stone) (validPlaces input stone))
+bestBoneFirst :: (Board,Result,Bones) -> Bones
+bestBoneFirst (input,output,bones) = bestBone:(remove bestBone bones)
+  where (bestBone,_) = (head . sortBy (\(_,m1) (_,m2) -> compare m1 m2)) [ (b, length (possibleMoves input output b)) | b <- bones ]
+
+possibleMoves :: Board -> Result -> Bone -> [(Board,Result)]
+possibleMoves input output stone = uniq (map (placePiece (input,output) stone) (validPlaces input stone))
 
 

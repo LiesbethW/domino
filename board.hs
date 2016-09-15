@@ -91,7 +91,14 @@ isValidPlace :: Board -> Bone -> (Position,Position) -> Bool
 isValidPlace board stone (pos1,pos2) = int (findValue pos1 board) == pip1 stone && int (findValue pos2 board) == pip2 stone
 
 validPlaces :: Board -> Bone -> [(Position,Position)]
-validPlaces board stone = [ (pos1,pos2) | (pos1,val1) <- board, (pos2,val2) <- neighbours pos1 board, int val1 == pip1 stone, int val2 == pip2 stone ]
+validPlaces board stone = uniqPlaces [ (pos1,pos2) | (pos1,val1) <- board, (pos2,val2) <- neighbours pos1 board, int val1 == pip1 stone, int val2 == pip2 stone ]
+
+uniqPlaces :: [(Position,Position)] -> [(Position,Position)]
+uniqPlaces list = uniqPlaces' list []
+  where
+    uniqPlaces' [] _  = []
+    uniqPlaces' ((p1,p2):xs) ls | (p1,p2) `elem` ls || (p2,p1) `elem` ls  = uniqPlaces' xs ls
+                                | otherwise                               = (p1,p2) : uniqPlaces' xs ((p1,p2):ls)
 
 placePiece :: (Board,Result) -> Bone -> (Position,Position) -> (Board, Result)
 placePiece (input,output) stone (pos1,pos2) | (any (\x -> x == Empty) . map (\x -> findValue x input)) [pos1,pos2] = error "One of the positions not (free) on board."

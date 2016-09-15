@@ -14,8 +14,8 @@ inList a (x:xs) = (a == x) || inList a xs
 find :: Eq a => a -> [(a,b)] -> [b]
 find x tuples = [ b | (a,b) <- tuples, a == x ]
 
-remove :: Eq a => a -> [(a,b)] -> [(a,b)]
-remove x tuples = [ (a,b) | (a,b) <- tuples, a /= x ]
+remove :: Eq a => a -> [a] -> [a]
+remove x list = [ a | a <- list, a /= x ]
 
 --- Chopping
 -- Unfold
