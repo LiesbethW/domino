@@ -12,7 +12,7 @@ This algorithm might be improved by cutting of branches of the tree earlier when
 A superior solution might be to traverse the grid and find all possible domino's for a given position. I have not calculated which solution is expected to converge sooner.
 
 #### Discarding impossible puzzles early
-The Domino script will search for solutions in a grid that it believes to be a domino puzzle. A valid puzzle has at least the following properties: if the largest pip is `n`, the total number of pips must be `(n+1)(n+2)` and each pip must be in the puzzle exactly `n+2` times.
+The Domino script only will search for solutions in a grid that it believes to be a domino puzzle. A valid puzzle has at least the following properties: if the largest pip is `n`, the total number of pips must be `(n+1)(n+2)` and each pip must be in the puzzle exactly `n+2` times.
 
 ## Implementation
 To solve the puzzle, I've created types to represent bones/dominoes (`Bone`), positions on the board (`Position`), the state of the board with pip values that have not been assigned to a bone yet (`Board`), the result of the dominoes that have been laid done (`Result`). The state of a game can be fully represented by a `Board`, a `Result` and the list of `Bones` that are still left (it might also be possible to leave out the list, but then it would constantly be necessary to deduce that list from the `Result`).
@@ -33,7 +33,7 @@ Let the program solve your domino puzzle by calling the function `gameFor` with 
 by calling
 ```gameFor [0,0,0,1,1,1,2,1,0,2,2,2]```.
 
-For convenience 4 example lists are included (`example1`...`example4`), so start by trying `gameFor example1`.
+For convenience 4 example lists are included (`example1`...`example4`), so start by trying `gameFor example1`. Examples 3 and 4 are the examples from the assignment description.
 
 
 ### Remark on the tests
