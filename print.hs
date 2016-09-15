@@ -1,6 +1,7 @@
 module Print where
 import Board
 import HelpWithMath
+import Solutions
 
 -- Print a string to a line
 printLn :: String -> IO ()
@@ -33,3 +34,16 @@ printResultList :: [Result] -> IO ()
 printResultList [] = printLn "There are no (more) solutions"
 printResultList (r:results) = do printResult r
                                  printResultList results
+
+printSolution :: Solution -> IO ()
+printSolution (Move (board,result,bones) solutions) = do printBoard board
+                                                         printResult result
+                                                         printList bones
+                                                         printSolutions solutions
+printSolution (Solved result) = do printLn "solved!"
+                                   printResult result
+
+printSolutions :: [Solution] -> IO ()
+printSolutions [] = return ()
+printSolutions (s:ss) = do printSolution s
+                           printSolutions ss

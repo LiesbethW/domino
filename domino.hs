@@ -25,10 +25,15 @@ example4 :: [Int]
 example4 = [4,2,5,2,6,3,5,4,5,0,4,3,1,4,1,1,1,2,3,0,2,2,2,2,1,4,0,1,3,5,6,5,4,0,6,0,3,6,6,5,4,0,1,6,4,0,3,0,6,5,3,6,2,1,5,3]
 
 
-solutionFor :: [Int] -> Solution
-solutionFor values | not (count (n+2) [0..n] values) = error "This is not a valid puzzle"
-                   | otherwise = solve (boardFromValues n values, newResult n, newBones n)  where n = maximum values
+solutionFor :: [Int] -> SolutionStrategy -> Solution
+solutionFor values strategy | not (count (n+2) [0..n] values) = error "This is not a valid puzzle"
+                            | otherwise = solve (boardFromValues n values, newResult n, newBones n) strategy where n = maximum values
 
-gameFor :: [Int] -> IO ()
-gameFor values = do printBoard (boardFromValues (maximum values) values)
-                    printResultList (getResults (solutionFor values))
+solveWithStrategy :: [Int] -> SolutionStrategy -> IO ()
+solveWithStrategy values strategy = do printBoard (boardFromValues (maximum values) values)
+                                       printResultList (getResults (solutionFor values strategy))
+
+gameFor :: [Int] -> Char -> IO ()
+gameFor values 'b' = solveWithStrategy values boneBased
+gameFor values 'p' = solveWithStrategy values placeBased
+gameFor values _   = solveWithStrategy values placeBased

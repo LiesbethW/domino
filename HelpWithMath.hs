@@ -37,3 +37,7 @@ uniq list = uniq' list []
     uniq' [] _  = []
     uniq' (x:xs) ls | x `elem` ls   = uniq' xs ls
                     | otherwise     = x : uniq' xs (x:ls)
+
+-- Reversing a tuple
+swap :: (a,b) -> (b,a)
+swap (a,b) = (b,a)
